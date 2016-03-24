@@ -1,0 +1,76 @@
+Updates Document
+
+TermProject.py:
+
+I made a menu system by changing the initial screen to a menu screen that displays four buttons: 1 Player, 2 Player, Instructions, and High Scores
+The buttons are made using a DrawRoundRect function obtained online that makes a rounded rectangle. I layered two of these to create an outline.
+The redrawAll function was updated to represent this change. It draws the various menu pages, including the game screen, depending on which mode is active at the time.
+The new drawHighScores draws the high scores page using a class variable dictionary that keeps track of the names of the players and their scores.
+The function sorts the scores from highest to lowest and blits the scores on to the screen in that order along with the player name.
+In order to take input from the player, I downloaded and imported a function called eztext that creates a textbox to take input.
+By typing in their name and pressing enter on the game over or game won screens, the player records their score and name.
+The new drawInstructions function blits several lines of instructions onto the screen, differentiating between 1 player and 2 player mode.
+In addition, I added background images for each of these modes, and the run function blits a different background on the screen depending on which menu page you are on.
+The mousePressed function was updated so that you can move to the various menu pages by clicking on a button. 
+The keyPressed function was updated so that, when on the menu pages, you can press backspace to go back to the main menu.
+
+In regard to the actual game itself, I added two new types of enemies, a boss (also of the enemy type), and three types of powerups: bombups, lifeups, and weaponups.
+The bombups increase the bombs of the player by 1, the liveups increase the player's lives, and the weaponups increase the player's weapon level.
+Weapon level is a new mechanic such that the number of columns in which the player can shoot is defined by the weapon level, up to a max of 3.
+The powerups themselves are drawn as different colored triangles with letters inside of them.
+The hitEnemy functions were altered so that enemies have a chance to randomly drop powerups when they die.
+The playerMovement function was changed so that the player can get the effects of the powerups when the player's bounds intersect with the powerup's bounds.
+The actual effects of the powerups are defined in the hitPowerup function.
+The powerupEvent function updates the powerups and the powerupAppearFunction holds the information for the random process in which enemies drop powerups.
+
+For the enemies and boss, I had to create two new separate functions for each, an event function and a hit function. 
+The enemyEvent functions define the movement of the enemies and when they fire bullets. There are two separate timer variables that denote when the enemies appear and how often they fire bullets.
+The boss has different patterns of shooting and moving that change depending on how much health it has left. 
+The hitEnemy functions define what happens when bullets from the player hit the enemies. The enemies will lose health and eventually die.
+In each of the enemyEvent functions, the hitPlayer function is called, which defines what happens when the enemies' bullets hit the player.
+When the player is hit, the player loses lives. If he has lives remaining, then the player sprite will flash and be invincible for a short period of time (the flashing is done by alternating the drawing of the sprite in the draw function).
+If he doesn't have enough lives remaining, there is a game over.
+The player also goes down one weapon level and loses weapon power.
+The weapon power is a new mechanic created where the player's individual bullets get stronger if he kills a certain amount of enemies (20 as of now).
+The losePower function describes the loss of these powers when the player is hit.
+
+Finally, I implemented the additional feature for two player mode.
+In making this feature, I essentially had to alter every single function to account for two player sprites.
+The functions behave differently when in the two player game mode:
+I had to initialize separate variables for the two players (lives, bombs, power, etc.)
+I had to change the mouseMotion/mouseDrag, mousePressed, and keyPressed functions so that one player moves by mouse movement and mouse buttons while the other moves with the keyboard.
+Player 1 also shoots and uses bombs with the mouse buttons while player 2 uses z and x, respectively.
+In order to make it so that only one player moved when the keys were pressed, I had to make a movePlayer function outside of the Player class and only call that for player 2.
+I wrote a definePlayer helper function to differentiate between the different players when calling other game functions.
+Thus, the hitEnemy and playerMovement functions, as well as their helpers, are all run separately for each player.
+The hitsPlayer function had to be changed drastically to prevent the game from crashing/ending when one player ran out lives, but the other didn't. In this case, the dead player sprite just disappears, and its functions don't run.
+The enemy and boss event functions were updated so that they called the hitsPlayer function for both Player sprites.
+I also had to change the losePower function so that only the player that was hit lost power.
+In timerFired, I had to specify if the second game mode was running because it calls different functions for the two player mode.
+For the drawing functions, redrawAll calls the drawTwoPlayerScreen function to draw the game screen for two players.
+This screen is similar to the normal 1 Player game screen, but it displays the details for player 1 on the left side of the screen and the details for player 2 on the right. The score is moved to the top right of the screen.
+
+
+Player.py:
+I removed the keyPressed information from the update function in the Player class and instead implemented that as a separate function in the upper level TermProject class.
+
+
+Enemy.py:
+Added classes for Enemy2, Enemy3, and Boss.
+Enemy2 moves straight down and shoots large bullets around it in a circle.
+Enemy3 moves left and right and shoots bullets depending on the position of the player.
+The Boss moves left and right or stays still depending on how much health it has. 
+The Boss is also animated.
+Finally, the Boss can fire 3 different types of bullets.
+
+
+Bullet.py:
+Added Enemy2Bullet. This bullet moves in a direction depending on the angle given to it.
+Added Enemy3Bullet. This bullet calculates the distance between the bullet and the player, moving toward the location of the player.
+Added BossBullet1. This bullet shoots in an angle, and all the bullets combined make a spiral.
+Added BossBullet2. This bullet shoots in a cone downward.
+Added BossBullet3. Shoots a ring of bullets. Each bullet gets bigger as it travels.
+
+
+Powerup.py:
+Added Bombup, Lifeup, and Weaponup classes. They are all powerups with different colors.
